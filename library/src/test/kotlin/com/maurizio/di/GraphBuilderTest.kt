@@ -1,6 +1,6 @@
 package com.maurizio.di
 
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class GraphBuilderTest {
@@ -21,9 +21,9 @@ class GraphBuilderTest {
         )
 
         // then
-        Assertions.assertThat(graph.get(ClassC::class)).isNotNull
-        Assertions.assertThat(graph.get(ClassD::class)).isNotNull
-        Assertions.assertThat(graph.get(ClassE::class)).isNotNull
-        Assertions.assertThat(graph.get(ClassF::class)).isNotNull
+        assertThat(graph.get(ClassC::class)).isNotNull
+        assertThat(graph.get(ClassD::class)).isNotNull
+        assertThat(graph.get(ClassE::class)).isNotNull
+        assertThat(graph.get(ClassF::class)).isNotNull
     }
 }

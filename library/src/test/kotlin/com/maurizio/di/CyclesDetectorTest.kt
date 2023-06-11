@@ -1,9 +1,8 @@
 package com.maurizio.di
 
 import io.mockk.mockk
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
+import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.junit.Test
 
 class CyclesDetectorTest {
     private val sorter: TopologicalSorter = mockk(relaxed = true)
@@ -17,13 +16,9 @@ class CyclesDetectorTest {
             ClassB::class.java.constructors[0]
         )
 
-        // when
-        val message =
-            assertThrows<DependencyNotFoundException> { cyclesDetector.detectCycles(classes) }.message
-
         // then
-        assertThat(message)
-            .isEqualTo("unable to instantiate ${ClassC::class}, no constructor with @Inject annotation found")
+        assertThatThrownBy { cyclesDetector.detectCycles(classes) }.isInstanceOf(DependencyNotFoundException::class.java)
+            .hasMessage("unable to instantiate ${ClassC::class}, no constructor with @Inject annotation found")
     }
 
     @Test
@@ -35,12 +30,8 @@ class CyclesDetectorTest {
             ClassD::class.java.constructors[0],
         )
 
-        // when
-        val message =
-            assertThrows<DependencyNotFoundException> { cyclesDetector.detectCycles(classes) }.message
-
         // then
-        assertThat(message)
-            .isEqualTo("unable to instantiate ${ClassB::class}, no constructor with @Inject annotation found")
+        assertThatThrownBy { cyclesDetector.detectCycles(classes) }.isInstanceOf(DependencyNotFoundException::class.java)
+            .hasMessage("unable to instantiate ${ClassB::class}, no constructor with @Inject annotation found")
     }
 }

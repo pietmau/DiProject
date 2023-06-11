@@ -2,10 +2,10 @@ package com.maurizio.di
 
 import io.mockk.every
 import io.mockk.mockk
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import javax.inject.Inject
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.junit.Test
 
 class InjectorTest {
     private val finder: ClassFinder = mockk(relaxed = true)
@@ -19,12 +19,9 @@ class InjectorTest {
             ClassB::class.java.constructors[0]
         )
 
-        // when
-        val message =
-            assertThrows<DependencyNotFoundException> { injector.inject(this::class.java.packageName) }.message
-
-        // then
-        assertThat(message).isEqualTo("unable to instantiate ${ClassC::class}, no constructor with @Inject annotation found")
+       // then
+        assertThatThrownBy { injector.inject(this::class.java.packageName) }.isInstanceOf(DependencyNotFoundException::class.java)
+            .hasMessage("unable to instantiate ${ClassC::class}, no constructor with @Inject annotation found")
     }
 
     @Test
@@ -37,12 +34,9 @@ class InjectorTest {
             ClassD::class.java.constructors[0],
         )
 
-        // when
-        val message =
-            assertThrows<CircularDependencyException> { injector.inject(this::class.java.packageName) }.message
-
         // then
-        assertThat(message).isEqualTo("Circular dependency detected")
+        assertThatThrownBy { injector.inject(this::class.java.packageName) }.isInstanceOf(CircularDependencyException::class.java)
+            .hasMessage("Circular dependency detected")
     }
 
     @Test
@@ -54,12 +48,9 @@ class InjectorTest {
             ClassD::class.java.constructors[0],
         )
 
-        // when
-        val message =
-            assertThrows<DependencyNotFoundException> { injector.inject(this::class.java.packageName) }.message
-
         // then
-        assertThat(message).isEqualTo("unable to instantiate ${ClassB::class}, no constructor with @Inject annotation found")
+        assertThatThrownBy { injector.inject(this::class.java.packageName) }.isInstanceOf(DependencyNotFoundException::class.java)
+            .hasMessage("unable to instantiate ${ClassB::class}, no constructor with @Inject annotation found")
     }
 
     @Test
@@ -89,8 +80,7 @@ class InjectorTest {
             ClassC::class.java.constructors[0],
             ClassD::class.java.constructors[0],
             ClassE::class.java.constructors[0],
-            ClassG::class.java.constructors[0]
-        )
+            ClassF::class.java.constructors[0])
 
         // when
         injector.inject(this::class.java.packageName)
@@ -114,8 +104,3 @@ class ClassD(val classC: ClassC)
 class ClassE(val classD: ClassD)
 
 class ClassF(val classE: ClassE, val classD: ClassD, classC: ClassC)
-
-class ClassG {
-    @Inject
-    lateinit var classC: ClassC
-}

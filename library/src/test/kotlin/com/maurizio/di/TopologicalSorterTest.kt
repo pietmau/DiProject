@@ -1,8 +1,7 @@
 package com.maurizio.di
 
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
+import org.assertj.core.api.Assertions
+import org.junit.Test
 
 class TopologicalSorterTest {
     private val sorter = TopologicalSorter()
@@ -19,16 +18,13 @@ class TopologicalSorterTest {
         val incomingEdges: Map<Class<out Any>, Int> =
             mapOf(ClassA::class.java to 1, ClassB::class.java to 2, ClassC::class.java to 0, ClassD::class.java to 1)
 
-        // when
-        val message = assertThrows<CircularDependencyException> {
+        // then
+        Assertions.assertThatThrownBy {
             sorter.doTopologicalSorting(
                 outgoingEdges,
                 incomingEdges
             )
-        }.message
-
-        // then
-        assertThat(message).isEqualTo("Circular dependency detected")
+        }.isInstanceOf(CircularDependencyException::class.java)
+            .hasMessage("Circular dependency detected")
     }
-
 }
