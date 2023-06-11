@@ -13,6 +13,5 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "MyIoC"
-include ':app'
-include ':dididi'
 include ':library'
+include ':app'

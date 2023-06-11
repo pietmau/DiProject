@@ -1,4 +1,4 @@
-package com.maurizio
+package com.maurizio.app
 
 import com.maurizio.di.Injector
 import javax.inject.Inject
