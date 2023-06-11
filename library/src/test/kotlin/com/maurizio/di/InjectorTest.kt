@@ -15,11 +15,10 @@ class InjectorTest {
     fun `given no constructor with @Inject annotation found when called then an exception is thrown`() {
         // given
         every { finder.getClassesAnnotatedWithInject() } returns setOf(
-            ClassA::class.java.constructors[0],
-            ClassB::class.java.constructors[0]
+            ClassA::class.java.constructors[0], ClassB::class.java.constructors[0]
         )
 
-       // then
+        // then
         assertThatThrownBy { injector.inject(this::class.java.packageName) }.isInstanceOf(DependencyNotFoundException::class.java)
             .hasMessage("unable to instantiate ${ClassC::class}, no constructor with @Inject annotation found")
     }
@@ -80,7 +79,8 @@ class InjectorTest {
             ClassC::class.java.constructors[0],
             ClassD::class.java.constructors[0],
             ClassE::class.java.constructors[0],
-            ClassF::class.java.constructors[0])
+            ClassF::class.java.constructors[0]
+        )
 
         // when
         injector.inject(this::class.java.packageName)
@@ -90,6 +90,30 @@ class InjectorTest {
         assertThat(injector.get<ClassD>()).isNotNull
         assertThat(injector.get<ClassE>()).isNotNull
         assertThat(injector.get<ClassF>()).isNotNull
+    }
+
+    @Test
+    fun `given the dependencies are correct and there is an annotated fieldwith property when called then builds the graph`() {
+        // given
+        every { finder.getClassesAnnotatedWithInject() } returns setOf(
+            ClassC::class.java.constructors[0],
+            ClassD::class.java.constructors[0],
+            ClassE::class.java.constructors[0],
+            ClassF::class.java.constructors[0],
+            ClassG::class.java.constructors[0]
+        )
+
+        // when
+        injector.inject(this::class.java.packageName)
+
+        // then
+        assertThat(injector.get<ClassC>()).isNotNull
+        assertThat(injector.get<ClassD>()).isNotNull
+        assertThat(injector.get<ClassE>()).isNotNull
+        assertThat(injector.get<ClassF>()).isNotNull
+        val classG = injector.get<ClassG>()
+        assertThat(classG).isNotNull
+        assertThat(classG.classC).isNotNull
     }
 }
 
@@ -104,3 +128,8 @@ class ClassD(val classC: ClassC)
 class ClassE(val classD: ClassD)
 
 class ClassF(val classE: ClassE, val classD: ClassD, classC: ClassC)
+
+class ClassG {
+    @Inject
+    lateinit var classC: ClassC
+}

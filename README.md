@@ -1,12 +1,12 @@
 # Dependency Injection Framework
 
-This is a simple example of a dependency injection framework that supports only constructor injection. It demonstrates how to use it in your Kotlin project.
+This is a simple example of a dependency injection framework in Kotlin that supports both constructor injection and property injection. It demonstrates how to use the framework in your project.
 
 ## Usage
 
-To use the dependency injection framework with constructor injection, follow these steps:
+To use the dependency injection framework, follow these steps:
 
-1. Create an instance of `Injector` in your `main` function:
+1. Create an instance of the `Injector` class in your `main` function:
 
 ```kotlin
 fun main(args: Array<String>) {
@@ -21,22 +21,26 @@ fun main(args: Array<String>) {
 injector.inject("com.maurizio")
 ```
 
-3. Define your classes with dependencies and annotate them with the `@Inject` annotation on the constructor. Here's an example:
+3. Define your classes with dependencies and annotate them with the `@Inject` annotation on the constructor or properties. Here's an example:
 
 ```kotlin
 class CoffeeMaker @Inject constructor(private val pump: Pump) {
+    @Inject
+    lateinit var heater: Heater
 
     fun makeCoffee() {
         pump.drip()
+        heater.heat()
         System.out.println("Coffee!!!")
     }
-
 }
 
 class Pump @Inject constructor() {
-
     fun drip(): Unit {}
+}
 
+class Heater @Inject constructor() {
+    fun heat(): Unit {}
 }
 ```
 
@@ -55,14 +59,23 @@ The `Injector` class is responsible for managing dependencies and providing inst
 
 - `inject(packageName: String)`: Scans the given package for classes with the `@Inject` annotation and registers them for dependency injection.
 
-- `get<T>(): T`: Retrieves an instance of the requested class `T` from the injector. The class must have a constructor annotated with `@Inject`.
+- `get<T>(): T`: Retrieves an instance of the requested class `T` from the injector.
 
 ### @Inject Annotation
 
-The `@Inject` annotation is used to mark constructors that have dependencies. The framework uses this annotation to identify the constructors that need to be invoked for dependency injection.
+The `@Inject` annotation is used to mark constructors and properties that have dependencies. The framework uses this annotation to identify the constructors that need to be invoked and properties that need to be injected.
 
 ## Conclusion
 
-This dependency injection framework provides support for constructor injection in your Kotlin project. By using the provided `Injector` class and the `@Inject` annotation on constructors, you can easily wire up your classes and achieve loose coupling between them.
+This dependency injection framework provides support for both constructor injection and property injection in your Kotlin project. By using the provided `Injector` class and the `@Inject` annotation on constructors and properties, you can easily wire up your classes and achieve loose coupling between them.
 
 Feel free to explore and extend this framework according to your project's needs. Happy coding!
+
+## License
+
+This project is licensed under the MIT License.
+
+## TODO
+
+Publish the library to Maven Central.
+

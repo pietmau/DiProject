@@ -11,16 +11,24 @@ fun main(args: Array<String>) {
 }
 
 class CoffeMaker @Inject constructor(private val pump: Pump) {
+    @Inject
+    lateinit var heater: Heater
 
     fun makeCoffee() {
         pump.drip()
+        heater.heat()
         System.out.println("Coffee!!!")
     }
-
 }
 
 class Pump @Inject constructor() {
 
     fun drip(): Unit {}
+
+}
+
+class Heater @Inject constructor() {
+
+    fun heat(): Unit {}
 
 }
