@@ -2,6 +2,12 @@
 
 This is a simple example of a dependency injection framework in Kotlin that supports both constructor injection and property injection. It demonstrates how to use the framework in your project.
 
+## Improvements needed
+- Creates the whole graph at startup, that is very inefficient. It should create the graph on demand, when a class is requested.
+- Uses reflection. This is slow and error-prone. It should use code generation instead.
+- To publish the library to Maven Central.
+- ...many other things...
+
 ## Usage
 
 To use the dependency injection framework, follow these steps:
@@ -18,7 +24,7 @@ fun main(args: Array<String>) {
 2. Use the `inject` method of the `Injector` class to register the desired package for component scanning. For example:
 
 ```kotlin
-injector.inject("com.maurizio")
+injector.inject("com.example_package")
 ```
 
 3. Define your classes with dependencies and annotate them with the `@Inject` annotation on the constructor or properties. Here's an example:
@@ -65,17 +71,8 @@ The `Injector` class is responsible for managing dependencies and providing inst
 
 The `@Inject` annotation is used to mark constructors and properties that have dependencies. The framework uses this annotation to identify the constructors that need to be invoked and properties that need to be injected.
 
-## Conclusion
-
-This dependency injection framework provides support for both constructor injection and property injection in your Kotlin project. By using the provided `Injector` class and the `@Inject` annotation on constructors and properties, you can easily wire up your classes and achieve loose coupling between them.
-
-Feel free to explore and extend this framework according to your project's needs. Happy coding!
-
 ## License
 
 This project is licensed under the MIT License.
 
-## TODO
-
-Publish the library to Maven Central.
 
